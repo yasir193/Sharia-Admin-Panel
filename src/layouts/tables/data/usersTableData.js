@@ -152,7 +152,7 @@ export default function usersTableData() {
           </MDBox>
         ),
 
-        function: isEditing ? (
+        job_title: isEditing ? (
           <MDBox display="flex" flexDirection="column" gap={1}>
             <TextField
               label="Job Title"
@@ -195,7 +195,7 @@ export default function usersTableData() {
           <MDTypography variant="caption">{planName}</MDTypography>
         ),
 
-        status: isEditing ? (
+        typeOfUser: isEditing ? (
           <MDBox display="flex" flexDirection="column" gap={1}>
             <TextField
               label="Business Name"
@@ -377,9 +377,9 @@ export default function usersTableData() {
   return {
     columns: [
       { Header: "author", accessor: "author", width: "25%", align: "left" },
-      { Header: "function", accessor: "function", width: "20%", align: "left" },
-      { Header: "plan", accessor: "plan", width: "15%", align: "center" }, // ✅ new column
-      { Header: "status", accessor: "status", width: "15%", align: "center" },
+      { Header: "Job Title", accessor: "job_title", width: "20%", align: "left" },
+      { Header: "plan", accessor: "plan", width: "15%", align: "center" },
+      { Header: "Type of user", accessor: "typeOfUser", width: "15%", align: "center" },
       { Header: "phone", accessor: "phone", width: "15%", align: "center" },
       { Header: "action", accessor: "action", width: "10%", align: "center" },
     ],
