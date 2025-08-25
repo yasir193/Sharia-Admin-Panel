@@ -7,20 +7,18 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import MDAvatar from "components/MDAvatar";
 import MDBadge from "components/MDBadge";
 import MDButton from "components/MDButton";
 
-// Avatar (placeholder)
-
-const API_URL = "https://sharia-base-three.vercel.app/user";
+const API_URL_USERS = "https://sharia-base-three.vercel.app/user";
+const API_URL_PLANS = "https://sharia-base-three.vercel.app/plan";
 
 // Safely read type in case backend returns `typeofuser` or `typeOfUser`
 const getType = (u) => u?.typeOfUser ?? u?.typeofuser ?? "person";
 
 export default function usersTableData() {
-  // raw users list
   const [users, setUsers] = useState([]);
+  const [plans, setPlans] = useState([]); // ✅ store all plans
 
   // add mode
   const [adding, setAdding] = useState(false);
@@ -34,6 +32,7 @@ export default function usersTableData() {
     phone: "",
     password: "",
     confirmPassword: "",
+    plan_id: "", // ✅ assign plan
   });
 
   // edit mode
@@ -46,23 +45,28 @@ export default function usersTableData() {
     business_name: "",
     business_sector: "",
     phone: "",
-    // password fields omitted for edit (usually not edited inline)
+    plan_id: "", // ✅ assign plan
   });
 
   // --- API helpers ---
   const fetchUsers = async () => {
-    const { data } = await axios.get(API_URL);
+    const { data } = await axios.get(API_URL_USERS);
     const list = Array.isArray(data) ? data : data?.data ?? [];
     setUsers(list);
   };
 
+  const fetchPlans = async () => {
+    const { data } = await axios.get(API_URL_PLANS);
+    const list = Array.isArray(data) ? data : data?.data ?? [];
+    setPlans(list);
+  };
+
   const handleAdd = async () => {
-    // simple client-side check to mirror your payload
     if (addForm.password !== addForm.confirmPassword) {
       alert("Passwords don't match");
       return;
     }
-    await axios.post(API_URL, addForm);
+    await axios.post(API_URL_USERS, addForm);
     setAdding(false);
     setAddForm({
       name: "",
@@ -74,6 +78,7 @@ export default function usersTableData() {
       phone: "",
       password: "",
       confirmPassword: "",
+      plan_id: "",
     });
     fetchUsers();
   };
@@ -88,36 +93,37 @@ export default function usersTableData() {
       business_name: u.business_name || "",
       business_sector: u.business_sector || "",
       phone: u.phone || "",
+      plan_id: u.plan_id || "",
     });
   };
 
   const saveEdit = async (id) => {
-    const payload = { ...editForm };
-    // don’t send empty optional fields as null accidentally; leave as strings
-    await axios.patch(`${API_URL}/${id}`, payload);
+    await axios.patch(`${API_URL_USERS}/${id}`, editForm);
     setEditingId(null);
     fetchUsers();
   };
 
-  const cancelEdit = () => {
-    setEditingId(null);
-  };
+  const cancelEdit = () => setEditingId(null);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this user?")) return;
-    await axios.delete(`${API_URL}/${id}`);
+    await axios.delete(`${API_URL_USERS}/${id}`);
     fetchUsers();
   };
 
   useEffect(() => {
     fetchUsers();
+    fetchPlans();
   }, []);
 
-  // --- Derived table rows (recompute whenever users / forms / modes change) ---
+  // --- Derived table rows ---
   const rows = useMemo(() => {
     const baseRows = users.map((u) => {
       const isEditing = editingId === u.user_id;
       const typeVal = isEditing ? editForm.typeOfUser : getType(u);
+
+      // find plan name by plan_id
+      const planName = plans.find((p) => p.plan_id === u.plan_id)?.plan_name || "—";
 
       return {
         author: isEditing ? (
@@ -136,13 +142,13 @@ export default function usersTableData() {
             />
           </MDBox>
         ) : (
-          <MDBox display="flex" alignItems="center" lineHeight={1}>
-            <MDBox ml={0} lineHeight={1}>
-              <MDTypography display="block" variant="button" fontWeight="medium">
-                {u.name}
-              </MDTypography>
-              <MDTypography variant="caption">{u.email}</MDTypography>
-            </MDBox>
+          <MDBox display="flex" flexDirection="column" lineHeight={1}>
+            <MDTypography variant="button" fontWeight="medium">
+              {u.name}
+            </MDTypography>
+            <MDTypography variant="caption" color="text.secondary">
+              {u.email}
+            </MDTypography>
           </MDBox>
         ),
 
@@ -166,12 +172,27 @@ export default function usersTableData() {
             </TextField>
           </MDBox>
         ) : (
-          <MDBox lineHeight={1} textAlign="left">
-            <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-              {u.job_title || "—"}
-            </MDTypography>
-            <MDTypography variant="caption">{typeVal}</MDTypography>
+          <MDBox>
+            <MDTypography variant="caption">{u.job_title}</MDTypography>
           </MDBox>
+        ),
+
+        plan: isEditing ? (
+          <TextField
+            select
+            label="Plan"
+            size="small"
+            value={editForm.plan_id}
+            onChange={(e) => setEditForm((f) => ({ ...f, plan_id: e.target.value }))}
+          >
+            {plans.map((p) => (
+              <MenuItem key={p.plan_id} value={p.plan_id}>
+                {p.plan_name}
+              </MenuItem>
+            ))}
+          </TextField>
+        ) : (
+          <MDTypography variant="caption">{planName}</MDTypography>
         ),
 
         status: isEditing ? (
@@ -190,14 +211,12 @@ export default function usersTableData() {
             />
           </MDBox>
         ) : (
-          <MDBox ml={-1}>
-            <MDBadge
-              badgeContent={typeVal === "person" ? "person" : "business"}
-              color={typeVal === "business" ? "info" : "success"}
-              variant="gradient"
-              size="sm"
-            />
-          </MDBox>
+          <MDBadge
+            badgeContent={typeVal === "person" ? "person" : "business"}
+            color={typeVal === "business" ? "info" : "success"}
+            variant="gradient"
+            size="sm"
+          />
         ),
 
         phone: isEditing ? (
@@ -208,13 +227,11 @@ export default function usersTableData() {
             onChange={(e) => setEditForm((f) => ({ ...f, phone: e.target.value }))}
           />
         ) : (
-          <MDTypography variant="caption" color="text" fontWeight="medium">
-            {u.phone || "—"}
-          </MDTypography>
+          <MDTypography variant="caption">{u.phone || "—"}</MDTypography>
         ),
 
         action: isEditing ? (
-          <MDBox display="flex" gap={1} flexWrap="wrap">
+          <MDBox display="flex" gap={1}>
             <MDButton
               variant="gradient"
               color="success"
@@ -228,7 +245,7 @@ export default function usersTableData() {
             </MDButton>
           </MDBox>
         ) : (
-          <MDBox display="flex" gap={1} flexWrap="wrap">
+          <MDBox display="flex" gap={1}>
             <MDButton variant="text" color="info" size="small" onClick={() => startEdit(u)}>
               Edit
             </MDButton>
@@ -245,7 +262,7 @@ export default function usersTableData() {
       };
     });
 
-    // Prepend the Add row when adding
+    // Add row
     if (adding) {
       baseRows.unshift({
         author: (
@@ -284,6 +301,21 @@ export default function usersTableData() {
             </TextField>
           </MDBox>
         ),
+        plan: (
+          <TextField
+            select
+            label="Plan"
+            size="small"
+            value={addForm.plan_id}
+            onChange={(e) => setAddForm((f) => ({ ...f, plan_id: e.target.value }))}
+          >
+            {plans.map((p) => (
+              <MenuItem key={p.plan_id} value={p.plan_id}>
+                {p.plan_name}
+              </MenuItem>
+            ))}
+          </TextField>
+        ),
         status: (
           <MDBox display="flex" flexDirection="column" gap={1}>
             <TextField
@@ -309,7 +341,7 @@ export default function usersTableData() {
           />
         ),
         action: (
-          <MDBox display="flex" gap={1} flexWrap="wrap">
+          <MDBox display="flex" gap={1}>
             <MDButton variant="gradient" color="success" size="small" onClick={handleAdd}>
               Save
             </MDButton>
@@ -327,15 +359,14 @@ export default function usersTableData() {
     }
 
     return baseRows;
-  }, [users, adding, addForm, editingId, editForm]);
+  }, [users, plans, adding, addForm, editingId, editForm]);
 
-  // Button to open Add row (render it in the card header)
   const addButton = (
     <MDButton
       variant="gradient"
       color="info"
       onClick={() => {
-        setEditingId(null); // prevent collision with edit mode
+        setEditingId(null);
         setAdding(true);
       }}
     >
@@ -345,11 +376,12 @@ export default function usersTableData() {
 
   return {
     columns: [
-      { Header: "author", accessor: "author", width: "30%", align: "left" },
-      { Header: "function", accessor: "function", align: "left" },
-      { Header: "status", accessor: "status", align: "center" },
-      { Header: "phone", accessor: "phone", align: "center" },
-      { Header: "action", accessor: "action", align: "center" },
+      { Header: "author", accessor: "author", width: "25%", align: "left" },
+      { Header: "function", accessor: "function", width: "20%", align: "left" },
+      { Header: "plan", accessor: "plan", width: "15%", align: "center" }, // ✅ new column
+      { Header: "status", accessor: "status", width: "15%", align: "center" },
+      { Header: "phone", accessor: "phone", width: "15%", align: "center" },
+      { Header: "action", accessor: "action", width: "10%", align: "center" },
     ],
     rows,
     addButton,
