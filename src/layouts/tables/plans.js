@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-
+import "../ontracts/contracts.css";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -46,14 +46,14 @@ function Plans() {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                className="green"
                 borderRadius="lg"
-                coloredShadow="info"
+                coloredShadow="success"
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <MDTypography variant="h6" color="white">
+                <MDTypography variant="h6" color="black">
                   Plans Table
                 </MDTypography>
                 {addPlanButton}

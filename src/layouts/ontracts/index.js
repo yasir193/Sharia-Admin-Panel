@@ -16,28 +16,23 @@ Coded by www.creative-tim.com
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import "../ontracts/contracts.css";
-// Material Dashboard 2 React components
+import "./contracts.css";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
-// Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
+import contractDataTable from "./data/contractsDataTable";
 
-// Data
-import usersTableData from "layouts/tables/data/usersTableData";
-
-function Tables() {
-  const { columns: uColumns, rows: uRows, addButton: addUserButton } = usersTableData();
+function Contracts() {
+  const { columns: fColumns, rows: fRows, addButton: addFileButton } = contractDataTable();
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
-          {/* Users Table */}
           <Grid item xs={12}>
             <Card>
               <MDBox
@@ -46,20 +41,20 @@ function Tables() {
                 py={3}
                 px={2}
                 variant="gradient"
-                borderRadius="lg"
                 className="green"
+                borderRadius="lg"
                 coloredShadow="success"
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
               >
                 <MDTypography variant="h6" color="black">
-                  Users Table
+                  Files Table
                 </MDTypography>
-                {addUserButton}
+                {addFileButton}
               </MDBox>
               <MDBox pt={3}>
-                <DataTable table={{ columns: uColumns, rows: uRows }} noEndBorder />
+                <DataTable table={{ columns: fColumns, rows: fRows }} noEndBorder />
               </MDBox>
             </Card>
           </Grid>
@@ -69,4 +64,4 @@ function Tables() {
   );
 }
 
-export default Tables;
+export default Contracts;

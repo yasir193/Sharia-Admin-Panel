@@ -37,6 +37,10 @@ const colors = {
     main: "#ffffff",
     focus: "#ffffff",
   },
+  green: {
+    main: "#baff58ff",
+    focus: "#95ff00ff",
+  },
 
   black: {
     light: "#000000",

@@ -38,10 +38,10 @@ Coded by www.creative-tim.com
 // Material Dashboard 2 React layouts
 import Tables from "layouts/tables";
 import Profile from "layouts/profile";
-
+import Plans from "layouts/tables/plans";
+import Contracts from "./layouts/ontracts/index";
 // @mui icons
 import Icon from "@mui/material/Icon";
-import Plans from "layouts/tables/plans";
 
 const routes = [
   {
@@ -59,6 +59,14 @@ const routes = [
     icon: <Icon fontSize="small">attach_money</Icon>,
     route: "/plans",
     component: <Plans />,
+  },
+  {
+    type: "collapse",
+    name: "Contracts",
+    key: "Contracts",
+    icon: <Icon fontSize="small">description</Icon>,
+    route: "/contracts",
+    component: <Contracts />,
   },
   {
     type: "collapse",

@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
-
+import "../../ontracts/contracts.css";
 const API_URL = "https://sharia-base-three.vercel.app/plan";
 
 export default function plansTableData() {
@@ -218,7 +218,7 @@ export default function plansTableData() {
   const addButton = (
     <MDButton
       variant="gradient"
-      color="info"
+      className="darkgreen"
       onClick={() => {
         setEditingId(null);
         setAdding(true);
