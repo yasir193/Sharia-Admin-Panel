@@ -63,19 +63,19 @@ const routes = [
   {
     type: "collapse",
     name: "Contracts",
-    key: "Contracts",
+    key: "contracts",
     icon: <Icon fontSize="small">description</Icon>,
     route: "/contracts",
     component: <Contracts />,
   },
-  {
-    type: "collapse",
-    name: "Profile",
-    key: "profile",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
-    component: <Profile />,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "Profile",
+  //   key: "profile",
+  //   icon: <Icon fontSize="small">person</Icon>,
+  //   route: "/profile",
+  //   component: <Profile />,
+  // },
 ];
 
 export default routes;
