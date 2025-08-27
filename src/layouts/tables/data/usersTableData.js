@@ -154,8 +154,9 @@ export default function usersTableData() {
         plan: isEditing ? (
           <TextField
             select
+            className="wi"
             label="Plan"
-            size="small"
+            size="medium"
             value={plans.find((p) => p.plan_id === editForm.fk_plan_id)?.plan_name || ""}
             onChange={(e) => {
               const selectedPlan = plans.find((p) => p.plan_name === e.target.value);
@@ -391,7 +392,7 @@ export default function usersTableData() {
   const addButton = (
     <MDButton
       variant="gradient"
-      className="darkgreen"
+      color="success"
       onClick={() => {
         setEditingId(null);
         setAdding(true);

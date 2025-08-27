@@ -68,14 +68,14 @@ const routes = [
     route: "/contracts",
     component: <Contracts />,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Profile",
-  //   key: "profile",
-  //   icon: <Icon fontSize="small">person</Icon>,
-  //   route: "/profile",
-  //   component: <Profile />,
-  // },
+  {
+    type: "collapse",
+    name: "Admins",
+    key: "admins",
+    icon: <Icon fontSize="small">admin_panel_settings</Icon>,
+    route: "/admins",
+    component: <Profile />,
+  },
 ];
 
 export default routes;

@@ -218,7 +218,7 @@ export default function plansTableData() {
   const addButton = (
     <MDButton
       variant="gradient"
-      className="darkgreen"
+      color="success"
       onClick={() => {
         setEditingId(null);
         setAdding(true);
