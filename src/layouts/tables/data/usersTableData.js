@@ -30,7 +30,7 @@ export default function usersTableData() {
     business_sector: "",
     phone: "",
     password: "",
-    plan_id: "",
+    fk_plan_id: "",
   });
 
   // Edit mode
@@ -43,7 +43,7 @@ export default function usersTableData() {
     business_name: "",
     business_sector: "",
     phone: "",
-    plan_id: "",
+    fk_plan_id: "",
   });
 
   // --- API helpers ---
@@ -72,7 +72,7 @@ export default function usersTableData() {
         business_sector: "",
         phone: "",
         password: "",
-        plan_id: "",
+        fk_plan_id: "",
       });
       fetchUsers();
     } catch (err) {
@@ -91,7 +91,7 @@ export default function usersTableData() {
       business_name: u.business_name || "",
       business_sector: u.business_sector || "",
       phone: u.phone || "",
-      plan_id: u.plan_id || "",
+      fk_plan_id: u.fk_plan_id || "",
     });
   };
 
@@ -120,7 +120,9 @@ export default function usersTableData() {
       const isEditing = editingId === u.user_id;
       const typeVal = isEditing ? editForm.typeOfUser : getType(u);
 
-      const planName = plans.find((p) => p.plan_id === u.plan_id)?.plan_name || "—";
+      const planName =
+        plans.find((p) => p.plan_id === (isEditing ? editForm.fk_plan_id : u.plan_id))?.plan_name ||
+        "—";
 
       return {
         author: isEditing ? (
@@ -154,11 +156,17 @@ export default function usersTableData() {
             select
             label="Plan"
             size="small"
-            value={editForm.plan_id}
-            onChange={(e) => setEditForm((f) => ({ ...f, plan_id: e.target.value }))}
+            value={plans.find((p) => p.plan_id === editForm.fk_plan_id)?.plan_name || ""}
+            onChange={(e) => {
+              const selectedPlan = plans.find((p) => p.plan_name === e.target.value);
+              setEditForm((f) => ({
+                ...f,
+                fk_plan_id: selectedPlan?.plan_id || "",
+              }));
+            }}
           >
             {plans.map((p) => (
-              <MenuItem key={p.plan_id} value={p.plan_id}>
+              <MenuItem key={p.plan_id} value={p.plan_name}>
                 {p.plan_name}
               </MenuItem>
             ))}
@@ -292,11 +300,17 @@ export default function usersTableData() {
             select
             label="Plan"
             size="small"
-            value={addForm.plan_id}
-            onChange={(e) => setAddForm((f) => ({ ...f, plan_id: e.target.value }))}
+            value={plans.find((p) => p.plan_id === addForm.fk_plan_id)?.plan_name || ""}
+            onChange={(e) => {
+              const selectedPlan = plans.find((p) => p.plan_name === e.target.value);
+              setAddForm((f) => ({
+                ...f,
+                fk_plan_id: selectedPlan?.plan_id || "",
+              }));
+            }}
           >
             {plans.map((p) => (
-              <MenuItem key={p.plan_id} value={p.plan_id}>
+              <MenuItem key={p.plan_id} value={p.plan_name}>
                 {p.plan_name}
               </MenuItem>
             ))}

@@ -21,9 +21,9 @@ Coded by www.creative-tim.com
 
 const colors = {
   background: {
-    default: "#1a2035",
-    sidenav: "#1f283e",
-    card: "#202940",
+    default: "#181515ff",
+    sidenav: "#221f1fff",
+    card: "#221f1fff",
   },
 
   text: {
@@ -115,7 +115,7 @@ const colors = {
     },
 
     success: {
-      main: "#66BB6A",
+      main: "#8ccf1fff",
       state: "#43A047",
     },
 
