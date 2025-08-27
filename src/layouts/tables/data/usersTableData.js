@@ -61,8 +61,7 @@ export default function usersTableData() {
 
   const handleAdd = async () => {
     try {
-      const res = await axios.post(API_URL_USERS, addForm);
-      alert(res.data.message || "User added successfully");
+      await axios.post(API_URL_USERS, addForm);
       setAdding(false);
       setAddForm({
         name: "",
@@ -77,33 +76,37 @@ export default function usersTableData() {
       });
       fetchUsers();
     } catch (err) {
-      alert(err.response?.data?.error || "Failed to add user");
       console.error("Add user failed:", err);
+      alert("Failed to add user");
     }
   };
 
-  const saveEdit = async (id) => {
-    try {
-      const res = await axios.patch(`${API_URL_USERS}/${id}`, editForm);
-      alert(res.data.message || "User updated successfully");
-      setEditingId(null);
-      fetchUsers();
-    } catch (err) {
-      alert(err.response?.data?.error || "Failed to update user");
-      console.error("Edit user failed:", err);
-    }
+  const startEdit = (u) => {
+    setEditingId(u.user_id);
+    setEditForm({
+      name: u.name || "",
+      email: u.email || "",
+      job_title: u.job_title || "",
+      typeOfUser: getType(u),
+      business_name: u.business_name || "",
+      business_sector: u.business_sector || "",
+      phone: u.phone || "",
+      fk_plan_id: u.fk_plan_id || "",
+    });
   };
+
+  const saveEdit = async (id) => {
+    await axios.patch(`${API_URL_USERS}/${id}`, editForm);
+    setEditingId(null);
+    fetchUsers();
+  };
+
   const cancelEdit = () => setEditingId(null);
+
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this user?")) return;
-    try {
-      const res = await axios.delete(`${API_URL_USERS}/${id}`);
-      alert(res.data.message || "User deleted successfully");
-      fetchUsers();
-    } catch (err) {
-      alert(err.response?.data?.error || "Failed to delete user");
-      console.error("Delete user failed:", err);
-    }
+    await axios.delete(`${API_URL_USERS}/${id}`);
+    fetchUsers();
   };
 
   useEffect(() => {
