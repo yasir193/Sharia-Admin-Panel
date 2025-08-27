@@ -22,7 +22,7 @@ import typography from "assets/theme-dark/base/typography";
 import pxToRem from "assets/theme-dark/functions/pxToRem";
 import rgba from "assets/theme-dark/functions/rgba";
 
-const { inputBorderColor, info, grey, transparent, white } = colors;
+const { inputBorderColor, info, grey, transparent, success, white } = colors;
 const { borderRadius } = borders;
 const { size } = typography;
 
@@ -39,7 +39,7 @@ const inputOutlined = {
 
       "&.Mui-focused": {
         "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: info.main,
+          borderColor: success.main,
         },
       },
     },

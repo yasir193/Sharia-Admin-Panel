@@ -37,11 +37,12 @@ Coded by www.creative-tim.com
 
 // Material Dashboard 2 React layouts
 import Tables from "layouts/tables";
-import Profile from "layouts/profile";
 import Plans from "layouts/tables/plans";
 import Contracts from "./layouts/ontracts/index";
 // @mui icons
 import Icon from "@mui/material/Icon";
+import Admins from "./layouts/admins/index";
+import Basic from "layouts/authentication/sign-in";
 
 const routes = [
   {
@@ -62,6 +63,14 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Signin",
+    key: "signin",
+    icon: <Icon fontSize="small">attach_money</Icon>,
+    route: "/signin",
+    component: <Basic />,
+  },
+  {
+    type: "collapse",
     name: "Contracts",
     key: "contracts",
     icon: <Icon fontSize="small">description</Icon>,
@@ -74,7 +83,7 @@ const routes = [
     key: "admins",
     icon: <Icon fontSize="small">admin_panel_settings</Icon>,
     route: "/admins",
-    component: <Profile />,
+    component: <Admins />,
   },
 ];
 

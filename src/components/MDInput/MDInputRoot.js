@@ -39,7 +39,7 @@ export default styled(TextField)(({ theme, ownerState }) => {
     },
 
     "& .MuiInputLabel-root.Mui-focused": {
-      color: colorError.main,
+      color: transparent,
     },
   });
 

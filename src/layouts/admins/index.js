@@ -16,16 +16,16 @@ Coded by www.creative-tim.com
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import "./contracts.css";
+import "../ontracts/contracts.css";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
-import contractDataTable from "./data/contractsDataTable";
+import contractDataTable from "./data/adminDataTable";
 
-function Contracts() {
+function Admins() {
   const { columns: fColumns, rows: fRows, addButton: addFileButton } = contractDataTable();
 
   return (
@@ -49,7 +49,7 @@ function Contracts() {
                 alignItems="center"
               >
                 <MDTypography variant="h6" color="black">
-                  Files Table
+                  Admin Table
                 </MDTypography>
                 {addFileButton}
               </MDBox>
@@ -64,4 +64,4 @@ function Contracts() {
   );
 }
 
-export default Contracts;
+export default Admins;
