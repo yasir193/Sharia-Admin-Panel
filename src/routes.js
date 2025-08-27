@@ -62,7 +62,6 @@ const routes = [
     component: <Plans />,
   },
   {
-    type: "collapse",
     name: "Signin",
     key: "signin",
     icon: <Icon fontSize="small">attach_money</Icon>,
