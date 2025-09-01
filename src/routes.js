@@ -43,6 +43,7 @@ import Contracts from "./layouts/ontracts/index";
 import Icon from "@mui/material/Icon";
 import Admins from "./layouts/admins/index";
 import Basic from "layouts/authentication/sign-in";
+import PlansRequests from "layouts/plansRequests";
 
 const routes = [
   {
@@ -83,6 +84,14 @@ const routes = [
     icon: <Icon fontSize="small">admin_panel_settings</Icon>,
     route: "/admins",
     component: <Admins />,
+  },
+  {
+    type: "collapse",
+    name: "Plans Requests",
+    key: "requests",
+    icon: <Icon fontSize="small">currency_exchange</Icon>,
+    route: "/requests",
+    component: <PlansRequests />,
   },
 ];
 
