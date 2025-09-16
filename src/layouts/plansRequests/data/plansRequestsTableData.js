@@ -5,10 +5,10 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
-const API_URL_PENDING = "http://localhost:3000/admin/pending";
-const API_URL_APPROVE = "http://localhost:3000/admin/approve";
-const API_URL_REJECT = "http://localhost:3000/admin/reject";
-const API_URL_USER = "http://localhost:3000/user";
+const API_URL_PENDING = "https://template-olive-one.vercel.app/admin/pending";
+const API_URL_APPROVE = "https://template-olive-one.vercel.app/admin/approve";
+const API_URL_REJECT = "https://template-olive-one.vercel.app/admin/reject";
+const API_URL_USER = "https://template-olive-one.vercel.app/user";
 
 export default function plansRequestsTableData() {
   const [requests, setRequests] = useState([]);
@@ -63,6 +63,22 @@ export default function plansRequestsTableData() {
 
   // Build rows for the table
   const rows = useMemo(() => {
+    if (requests.length === 0) {
+      return [
+        {
+          user: (
+            <MDTypography variant="caption" color="text">
+              No pending requests found
+            </MDTypography>
+          ),
+          plan: "",
+          status: "",
+          date: "",
+          action: "",
+        },
+      ];
+    }
+
     return requests.map((r) => ({
       user: (
         <MDBox display="flex" flexDirection="column" lineHeight={1}>

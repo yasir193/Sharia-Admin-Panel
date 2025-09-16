@@ -1,25 +1,36 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+const API_URL_STATS = "https://template-olive-one.vercel.app/admin/dashboard-stats";
 
-Coded by www.creative-tim.com
+export default function useMonthlyRegistrations() {
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: { label: "Monthly Registrations", data: [] },
+  });
+  const [loading, setLoading] = useState(true);
 
- =========================================================
+  useEffect(() => {
+    const fetchMonthly = async () => {
+      try {
+        const { data } = await axios.get(API_URL_STATS);
+        if (data?.monthlyRegistrations) {
+          setChartData({
+            labels: data.monthlyRegistrations.labels,
+            datasets: {
+              label: data.monthlyRegistrations.datasets.label,
+              data: data.monthlyRegistrations.datasets.data,
+            },
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching monthly registrations:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMonthly();
+  }, []);
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-export default {
-  sales: {
-    labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    datasets: { label: "Mobile apps", data: [50, 40, 300, 320, 500, 350, 200, 230, 500] },
-  },
-  tasks: {
-    labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    datasets: { label: "Desktop apps", data: [50, 40, 300, 220, 500, 250, 400, 230, 500] },
-  },
-};
+  return { chartData, loading };
+}

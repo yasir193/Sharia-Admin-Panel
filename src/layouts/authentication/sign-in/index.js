@@ -29,7 +29,7 @@ function Basic() {
     setError("");
 
     try {
-      const response = await fetch("https://sharia-base-three.vercel.app/auth-admin/signin", {
+      const response = await fetch("https://template-olive-one.vercel.app/auth-admin/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -46,7 +46,7 @@ function Basic() {
       localStorage.setItem("adminToken", data.accesstoken);
 
       // ✅ redirect to dashboard after login
-      navigate("/users");
+      navigate("/dashboard");
     } catch (err) {
       setError("Something went wrong. Please try again.");
     }

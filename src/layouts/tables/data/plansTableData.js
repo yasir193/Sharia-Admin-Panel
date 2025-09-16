@@ -8,7 +8,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import "../../ontracts/contracts.css";
-const API_URL = "https://sharia-base-three.vercel.app/plan";
+const API_URL = "https://template-olive-one.vercel.app/plan";
 
 export default function plansTableData() {
   const [plans, setPlans] = useState([]);

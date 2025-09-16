@@ -7,8 +7,9 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDBadge from "components/MDBadge";
 import MDButton from "components/MDButton";
+import { jwtDecode } from "jwt-decode";
 
-const API_URL_ADMINS = "https://sharia-base-three.vercel.app/admin";
+const API_URL_ADMINS = "https://template-olive-one.vercel.app/admin";
 
 export default function adminsTableData() {
   const [admins, setAdmins] = useState([]);
@@ -20,7 +21,7 @@ export default function adminsTableData() {
     email: "",
     phone: "",
     password: "",
-    role: "admin", // default role
+    role: "admin",
   });
 
   // Edit mode
@@ -32,26 +33,49 @@ export default function adminsTableData() {
     role: "admin",
   });
 
+  // 🔑 Decode access token
+  const token = localStorage.getItem("adminToken");
+  let decoded = null;
+  if (token) {
+    try {
+      decoded = jwtDecode(token);
+      console.log("Decoded access token:", decoded);
+    } catch (err) {
+      console.error("Invalid token", err);
+    }
+  }
+
+  // Extract role safely
+  const userRole = decoded?.role || decoded?.admin?.role;
+
+  // Attach token to every request
+  const authHeaders = token ? { headers: { accesstoken: token } } : {};
+
   // --- API helpers ---
   const fetchAdmins = async () => {
-    const { data } = await axios.get(API_URL_ADMINS);
-    const list = Array.isArray(data) ? data : data?.data ?? [];
-    setAdmins(list);
+    try {
+      const { data } = await axios.get(API_URL_ADMINS, authHeaders);
+      const list = Array.isArray(data) ? data : data?.data ?? [];
+      setAdmins(list);
+    } catch (err) {
+      console.error("Fetch admins failed:", err);
+    }
   };
 
   const handleAdd = async () => {
     try {
-      await axios.post(API_URL_ADMINS, addForm);
+      await axios.post(API_URL_ADMINS, addForm, authHeaders);
       setAdding(false);
       setAddForm({ name: "", email: "", phone: "", password: "", role: "admin" });
       fetchAdmins();
     } catch (err) {
       console.error("Add admin failed:", err);
-      alert("Failed to add admin", err);
+      alert("Failed to add admin");
     }
   };
 
   const startEdit = (a) => {
+    // Allow edit for everyone
     setEditingId(a.admin_id);
     setEditForm({
       name: a.name || "",
@@ -62,17 +86,27 @@ export default function adminsTableData() {
   };
 
   const saveEdit = async (id) => {
-    await axios.patch(`${API_URL_ADMINS}/${id}`, editForm);
-    setEditingId(null);
-    fetchAdmins();
+    try {
+      await axios.patch(`${API_URL_ADMINS}/${id}`, editForm, authHeaders);
+      setEditingId(null);
+      fetchAdmins();
+    } catch (err) {
+      console.error("Edit failed:", err);
+      alert("Edit failed");
+    }
   };
 
   const cancelEdit = () => setEditingId(null);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this admin?")) return;
-    await axios.delete(`${API_URL_ADMINS}/${id}`);
-    fetchAdmins();
+    try {
+      await axios.delete(`${API_URL_ADMINS}/${id}`, authHeaders);
+      fetchAdmins();
+    } catch (err) {
+      console.error("Delete failed:", err);
+      alert("Delete failed");
+    }
   };
 
   useEffect(() => {
@@ -158,24 +192,29 @@ export default function adminsTableData() {
           </MDBox>
         ) : (
           <MDBox display="flex" gap={1}>
-            <MDButton variant="text" color="info" size="small" onClick={() => startEdit(a)}>
+            {/* All admins can edit */}
+            {/* <MDButton variant="text" color="info" size="small" onClick={() => startEdit(a)}>
               Edit
-            </MDButton>
-            <MDButton
-              variant="text"
-              color="error"
-              size="small"
-              onClick={() => handleDelete(a.admin_id)}
-            >
-              Delete
-            </MDButton>
+            </MDButton> */}
+
+            {/* Only super admins can delete */}
+            {userRole === "super" && (
+              <MDButton
+                variant="text"
+                color="error"
+                size="small"
+                onClick={() => handleDelete(a.admin_id)}
+              >
+                Delete
+              </MDButton>
+            )}
           </MDBox>
         ),
       };
     });
 
-    // Add row
-    if (adding) {
+    // Add row (only for super admins)
+    if (adding && userRole === "super") {
       baseRows.unshift({
         name: (
           <TextField
@@ -232,20 +271,22 @@ export default function adminsTableData() {
     }
 
     return baseRows;
-  }, [admins, adding, addForm, editingId, editForm]);
+  }, [admins, adding, addForm, editingId, editForm, userRole]);
 
-  const addButton = (
-    <MDButton
-      variant="gradient"
-      color="success"
-      onClick={() => {
-        setEditingId(null);
-        setAdding(true);
-      }}
-    >
-      + Add Admin
-    </MDButton>
-  );
+  // Show Add button only for super admins
+  const addButton =
+    userRole === "super" ? (
+      <MDButton
+        variant="gradient"
+        color="success"
+        onClick={() => {
+          setEditingId(null);
+          setAdding(true);
+        }}
+      >
+        + Add Admin
+      </MDButton>
+    ) : null;
 
   return {
     columns: [

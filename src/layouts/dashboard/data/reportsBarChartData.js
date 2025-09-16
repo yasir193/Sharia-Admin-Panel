@@ -1,19 +1,36 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+const API_URL_STATS = "https://template-olive-one.vercel.app/admin/dashboard-stats";
 
-Coded by www.creative-tim.com
+export default function useWeeklyRegistrations() {
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: { label: "Registrations", data: [] },
+  });
+  const [loading, setLoading] = useState(true);
 
- =========================================================
+  useEffect(() => {
+    const fetchWeekly = async () => {
+      try {
+        const { data } = await axios.get(API_URL_STATS);
+        if (data?.weeklyRegistrations) {
+          setChartData({
+            labels: data.weeklyRegistrations.labels,
+            datasets: {
+              label: data.weeklyRegistrations.datasets.label,
+              data: data.weeklyRegistrations.datasets.data,
+            },
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching weekly registrations:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchWeekly();
+  }, []);
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-export default {
-  labels: ["M", "T", "W", "T", "F", "S", "S"],
-  datasets: { label: "Sales", data: [50, 20, 10, 22, 50, 10, 40] },
-};
+  return { chartData, loading };
+}

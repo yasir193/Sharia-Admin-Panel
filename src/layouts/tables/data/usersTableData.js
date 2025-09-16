@@ -9,10 +9,9 @@ import MDTypography from "components/MDTypography";
 import MDBadge from "components/MDBadge";
 import MDButton from "components/MDButton";
 
-const API_URL_USERS = "https://sharia-base-three.vercel.app/user";
-const API_URL_PLANS = "https://sharia-base-three.vercel.app/plan";
+const API_URL_USERS = "https://template-olive-one.vercel.app/user";
+const API_URL_PLANS = "https://template-olive-one.vercel.app/plan";
 
-// Safely read type in case backend returns `typeofuser` or `typeOfUser`
 const getType = (u) => u?.typeOfUser ?? u?.typeofuser ?? "person";
 
 export default function usersTableData() {
@@ -32,6 +31,7 @@ export default function usersTableData() {
     password: "",
     fk_plan_id: "",
   });
+  const [errorMessages, setErrorMessages] = useState([]); // <-- new state for errors
 
   // Edit mode
   const [editingId, setEditingId] = useState(null);
@@ -63,6 +63,7 @@ export default function usersTableData() {
     try {
       await axios.post(API_URL_USERS, addForm);
       setAdding(false);
+      setErrorMessages([]); // clear old errors
       setAddForm({
         name: "",
         email: "",
@@ -76,8 +77,12 @@ export default function usersTableData() {
       });
       fetchUsers();
     } catch (err) {
-      console.error("Add user failed:", err);
-      alert("Failed to add user");
+      if (err.response?.data) {
+        const { message, errors } = err.response.data;
+        setErrorMessages(errors || [{ field: "general", message }]);
+      } else {
+        setErrorMessages([{ field: "general", message: "Something went wrong" }]);
+      }
     }
   };
 
@@ -293,6 +298,18 @@ export default function usersTableData() {
               value={addForm.password}
               onChange={(e) => setAddForm((f) => ({ ...f, password: e.target.value }))}
             />
+
+            {/* Show errors under fields */}
+            {errorMessages.length > 0 && (
+              <MDBox display="flex" flexDirection="column" mt={1}>
+                {errorMessages.map((e, idx) => (
+                  <MDTypography key={idx} variant="caption" color="error">
+                    {e.field !== "general" ? `${e.field}: ` : ""}
+                    {e.message}
+                  </MDTypography>
+                ))}
+              </MDBox>
+            )}
           </MDBox>
         ),
 
@@ -377,7 +394,10 @@ export default function usersTableData() {
               variant="outlined"
               color="secondary"
               size="small"
-              onClick={() => setAdding(false)}
+              onClick={() => {
+                setAdding(false);
+                setErrorMessages([]); // clear errors when cancel
+              }}
             >
               Cancel
             </MDButton>
@@ -387,7 +407,7 @@ export default function usersTableData() {
     }
 
     return baseRows;
-  }, [users, plans, adding, addForm, editingId, editForm]);
+  }, [users, plans, adding, addForm, editingId, editForm, errorMessages]);
 
   const addButton = (
     <MDButton
@@ -396,6 +416,7 @@ export default function usersTableData() {
       onClick={() => {
         setEditingId(null);
         setAdding(true);
+        setErrorMessages([]); // clear old errors
       }}
     >
       + Add User
