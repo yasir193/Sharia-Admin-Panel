@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API_URL_STATS = "https://template-olive-one.vercel.app/admin/dashboard-stats";
+const API_URL_STATS = "http://148.230.125.200:9110/api_db/admin/dashboard-stats";
 
 export default function useWeeklyRegistrations() {
   const [chartData, setChartData] = useState({

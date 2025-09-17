@@ -19,7 +19,7 @@ import axios from "axios";
 import useWeeklyRegistrations from "./data/reportsBarChartData";
 import useMonthlyRegistrations from "./data/reportsLineChartData";
 
-const API_URL_STATS = "https://template-olive-one.vercel.app/admin/dashboard-stats";
+const API_URL_STATS = "http://148.230.125.200:9110/api_db/admin/dashboard-stats";
 
 function Dashboard() {
   const { chartData: weeklyData, loading: weeklyLoading } = useWeeklyRegistrations();

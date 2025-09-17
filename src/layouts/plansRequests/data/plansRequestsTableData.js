@@ -5,10 +5,10 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
-const API_URL_PENDING = "https://template-olive-one.vercel.app/admin/pending";
-const API_URL_APPROVE = "https://template-olive-one.vercel.app/admin/approve";
-const API_URL_REJECT = "https://template-olive-one.vercel.app/admin/reject";
-const API_URL_USER = "https://template-olive-one.vercel.app/user";
+const API_URL_PENDING = "http://148.230.125.200:9110/api_db/admin/pending";
+const API_URL_APPROVE = "http://148.230.125.200:9110/api_db/admin/approve";
+const API_URL_REJECT = "http://148.230.125.200:9110/api_db/admin/reject";
+const API_URL_USER = "http://148.230.125.200:9110/api_db/user";
 
 export default function plansRequestsTableData() {
   const [requests, setRequests] = useState([]);

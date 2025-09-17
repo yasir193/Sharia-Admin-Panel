@@ -9,8 +9,8 @@ import MDTypography from "components/MDTypography";
 import MDBadge from "components/MDBadge";
 import MDButton from "components/MDButton";
 
-const API_URL_USERS = "https://template-olive-one.vercel.app/user";
-const API_URL_PLANS = "https://template-olive-one.vercel.app/plan";
+const API_URL_USERS = "http://148.230.125.200:9110/api_db/user";
+const API_URL_PLANS = "http://148.230.125.200:9110/api_db/plan";
 
 const getType = (u) => u?.typeOfUser ?? u?.typeofuser ?? "person";
 

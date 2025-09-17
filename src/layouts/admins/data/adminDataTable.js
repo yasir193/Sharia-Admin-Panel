@@ -9,7 +9,7 @@ import MDBadge from "components/MDBadge";
 import MDButton from "components/MDButton";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL_ADMINS = "https://template-olive-one.vercel.app/admin";
+const API_URL_ADMINS = "http://148.230.125.200:9110/api_db/admin";
 
 export default function adminsTableData() {
   const [admins, setAdmins] = useState([]);

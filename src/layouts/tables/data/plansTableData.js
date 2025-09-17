@@ -8,7 +8,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import "../../ontracts/contracts.css";
-const API_URL = "https://template-olive-one.vercel.app/plan";
+const API_URL = "http://148.230.125.200:9110/api_db/plan";
 
 export default function plansTableData() {
   const [plans, setPlans] = useState([]);
@@ -18,7 +18,7 @@ export default function plansTableData() {
   const [addForm, setAddForm] = useState({
     plan_name: "",
     refine_requests: "",
-    daily_requests_per_day: "",
+    analysis_requests: "",
     number_of_uploads: "",
   });
 
@@ -27,13 +27,15 @@ export default function plansTableData() {
   const [editForm, setEditForm] = useState({
     plan_name: "",
     refine_requests: "",
-    daily_requests_per_day: "",
+    analysis_requests: "",
     number_of_uploads: "",
   });
 
   // --- API Helpers ---
   const fetchPlans = async () => {
     const { data } = await axios.get(API_URL);
+    console.log(data);
+
     const list = Array.isArray(data) ? data : data?.data ?? [];
     setPlans(list);
   };
@@ -44,7 +46,7 @@ export default function plansTableData() {
     setAddForm({
       plan_name: "",
       refine_requests: "",
-      daily_requests_per_day: "",
+      analysis_requests: "",
       number_of_uploads: "",
     });
     fetchPlans();
@@ -55,7 +57,7 @@ export default function plansTableData() {
     setEditForm({
       plan_name: p.plan_name || "",
       refine_requests: p.refine_requests || "",
-      daily_requests_per_day: p.daily_requests_per_day || "",
+      analysis_requests: p.analysis_requests || "",
       number_of_uploads: p.number_of_uploads || "",
     });
   };
@@ -105,15 +107,15 @@ export default function plansTableData() {
         ) : (
           <MDTypography variant="caption">{p.refine_requests}</MDTypography>
         ),
-        daily: isEditing ? (
+        analysis: isEditing ? (
           <TextField
             size="small"
             type="number"
-            value={editForm.daily_requests_per_day}
-            onChange={(e) => setEditForm((f) => ({ ...f, daily_requests_per_day: e.target.value }))}
+            value={editForm.analysis_requests}
+            onChange={(e) => setEditForm((f) => ({ ...f, analysis_requests: e.target.value }))}
           />
         ) : (
-          <MDTypography variant="caption">{p.daily_requests_per_day}</MDTypography>
+          <MDTypography variant="caption">{p.analysis_requests}</MDTypography>
         ),
         uploads: isEditing ? (
           <TextField
@@ -176,13 +178,13 @@ export default function plansTableData() {
             onChange={(e) => setAddForm((f) => ({ ...f, refine_requests: e.target.value }))}
           />
         ),
-        daily: (
+        analysis: (
           <TextField
-            label="Daily Requests"
+            label="Analysis Requests"
             type="number"
             size="small"
-            value={addForm.daily_requests_per_day}
-            onChange={(e) => setAddForm((f) => ({ ...f, daily_requests_per_day: e.target.value }))}
+            value={addForm.analysis_requests}
+            onChange={(e) => setAddForm((f) => ({ ...f, analysis_requests: e.target.value }))}
           />
         ),
         uploads: (
@@ -232,7 +234,7 @@ export default function plansTableData() {
     columns: [
       { Header: "Plan Name", accessor: "name", align: "left" },
       { Header: "Refine Requests", accessor: "refine", align: "center" },
-      { Header: "Daily Requests", accessor: "daily", align: "center" },
+      { Header: "Analysis Requests", accessor: "analysis", align: "center" },
       { Header: "Uploads", accessor: "uploads", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],

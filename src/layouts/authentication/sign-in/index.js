@@ -29,7 +29,7 @@ function Basic() {
     setError("");
 
     try {
-      const response = await fetch("https://template-olive-one.vercel.app/auth-admin/signin", {
+      const response = await fetch("http://148.230.125.200:9110/api_db/auth-admin/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

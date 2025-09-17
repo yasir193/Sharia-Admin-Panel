@@ -8,7 +8,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
-const API_URL_FILES = "https://template-olive-one.vercel.app/upload";
+const API_URL_FILES = "http://148.230.125.200:9110/api_db/upload";
 
 export default function contractsDataTable() {
   const [files, setFiles] = useState([]);
